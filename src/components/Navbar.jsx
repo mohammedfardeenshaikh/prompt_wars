@@ -14,20 +14,20 @@ const Navbar = () => {
   };
 
   return (
-    <header className="navbar">
+    <header className="navbar" role="banner">
       <div className="navbar-brand">
-        <Link to="/" style={{ textDecoration: 'none' }}>
+        <Link to="/" style={{ textDecoration: 'none' }} aria-label="ArenaPulse Home">
           <h2 style={{ margin: 0, fontSize: '1.25rem', color: 'var(--neon-cyan)' }}>ArenaPulse</h2>
         </Link>
       </div>
-      <div className="search-bar">
-        <Search size={18} className="search-icon" />
-        <input type="text" placeholder="Find events or seats..." />
+      <div className="search-bar" role="search">
+        <Search size={18} className="search-icon" aria-hidden="true" />
+        <input type="text" placeholder="Find events or seats..." aria-label="Search events" />
       </div>
       
       <div className="nav-actions">
-        <button className="icon-btn relative">
-          <Bell size={20} />
+        <button className="icon-btn relative" aria-label="Notifications">
+          <Bell size={20} aria-hidden="true" />
           <span className="notification-dot animate-pulse-glow"></span>
         </button>
         {userRole && (

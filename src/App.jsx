@@ -1,14 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, Suspense, lazy } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Sidebar from './components/Sidebar';
 import Footer from './components/Footer';
-import Home from './pages/Home';
-import LiveExperience from './pages/LiveExperience';
-import UserDashboard from './pages/UserDashboard';
-import AdminDashboard from './pages/AdminDashboard';
-import Login from './pages/Login';
 import ProtectedRoute from './components/ProtectedRoute';
+
+// Lazy loading heavy pages
+const Home = lazy(() => import('./pages/Home'));
+const LiveExperience = lazy(() => import('./pages/LiveExperience'));
+const UserDashboard = lazy(() => import('./pages/UserDashboard'));
+const AdminDashboard = lazy(() => import('./pages/AdminDashboard'));
+const Login = lazy(() => import('./pages/Login'));
 
 function App() {
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -19,17 +21,19 @@ function App() {
       <div className="main-content">
         <Navbar />
         <div className="page-wrapper">
-          <Routes>
-            <Route path="/login" element={<Login />} />
-            <Route path="/" element={<Home />} />
-            
-            {/* Must be logged in */}
-            <Route path="/live" element={<ProtectedRoute><LiveExperience /></ProtectedRoute>} />
-            <Route path="/user" element={<ProtectedRoute><UserDashboard /></ProtectedRoute>} />
-            
-            {/* Must be admin */}
-            <Route path="/admin" element={<ProtectedRoute requireAdmin={true}><AdminDashboard /></ProtectedRoute>} />
-          </Routes>
+          <Suspense fallback={<div style={{ color: 'var(--text-secondary)', padding: '2rem' }}>Loading application modules...</div>}>
+            <Routes>
+              <Route path="/login" element={<Login />} />
+              <Route path="/" element={<Home />} />
+              
+              {/* Must be logged in */}
+              <Route path="/live" element={<ProtectedRoute><LiveExperience /></ProtectedRoute>} />
+              <Route path="/user" element={<ProtectedRoute><UserDashboard /></ProtectedRoute>} />
+              
+              {/* Must be admin */}
+              <Route path="/admin" element={<ProtectedRoute requireAdmin={true}><AdminDashboard /></ProtectedRoute>} />
+            </Routes>
+          </Suspense>
         </div>
         <Footer />
       </div>
