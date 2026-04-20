@@ -1,0 +1,142 @@
+.home-page {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* Hero */
+.hero-section {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 3rem 2rem;
+  background: linear-gradient(145deg, var(--bg-card) 0%, var(--bg-dark) 100%);
+  border-radius: var(--border-radius-lg);
+  border: 1px solid var(--border-subtle);
+  overflow: hidden;
+  position: relative;
+}
+
+.hero-content {
+  flex: 1;
+  max-width: 600px;
+  z-index: 2;
+}
+
+.hero-content h1 {
+  font-size: 3rem;
+  line-height: 1.2;
+  margin-bottom: 1rem;
+}
+
+.hero-content p {
+  font-size: 1.125rem;
+  margin-bottom: 2rem;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 1rem;
+}
+
+.hero-visual {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1;
+}
+
+/* Hero Visual Image */
+.hero-image {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-neon);
+  border: 1px solid var(--border-neon);
+  transform: scale(0.9);
+  transition: var(--transition-smooth);
+}
+
+.hero-image:hover {
+  transform: scale(0.95);
+  box-shadow: 0 0 25px rgba(6, 182, 212, 0.6);
+}
+
+/* CTA Hierarchy improvements */
+.btn-large {
+  font-size: 1.125rem;
+  padding: 0.875rem 1.75rem;
+}
+
+.subdued {
+  opacity: 0.8;
+  border-color: var(--border-subtle);
+  color: var(--text-main);
+}
+
+.subdued:hover {
+  opacity: 1;
+  border-color: var(--neon-cyan);
+}
+
+/* Event Banner */
+.event-banner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 2rem;
+  background-color: var(--bg-card);
+  border-radius: var(--border-radius-lg);
+  border-left: 4px solid var(--accent-red);
+}
+
+.banner-stats {
+  display: flex;
+  gap: 2rem;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.stat-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.stat-label {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+}
+
+/* Features */
+.feature-card {
+  text-align: center;
+  padding: 2rem 1.5rem;
+}
+
+.feature-icon {
+  color: var(--neon-blue);
+  margin-bottom: 1rem;
+}
+
+.feature-card h4 {
+  margin-bottom: 0.5rem;
+  font-size: 1.125rem;
+}
+
+@media (max-width: 768px) {
+  .hero-section {
+    flex-direction: column;
+    padding: 2rem 1rem;
+  }
+  .hero-content h1 { font-size: 2rem; }
+  .stadium-hologram { transform: scale(0.6) rotateX(60deg) rotateZ(45deg); margin-top: 2rem; }
+  .hero-image { margin-top: 2rem; }
+  .event-banner { flex-direction: column; align-items: flex-start; gap: 1rem; }
+  .banner-stats { width: 100%; justify-content: space-between; }
+}
