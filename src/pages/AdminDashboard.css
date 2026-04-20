@@ -20,6 +20,11 @@
   margin-top: 1rem;
 }
 
+.dashboard-chart {
+  width: 100%;
+  height: 300px;
+}
+
 .form-select, .form-textarea {
   width: 100%;
   background: var(--bg-dark);

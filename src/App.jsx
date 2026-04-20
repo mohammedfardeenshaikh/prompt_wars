@@ -3,6 +3,7 @@ import { Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Sidebar from './components/Sidebar';
 import Footer from './components/Footer';
+import SkipLink from './components/SkipLink';
 import ProtectedRoute from './components/ProtectedRoute';
 
 // Lazy loading heavy pages
@@ -17,10 +18,11 @@ function App() {
 
   return (
     <div className="app-container">
+      <SkipLink targetId="main-content" />
       <Sidebar isCollapsed={isCollapsed} setIsCollapsed={setIsCollapsed} />
       <div className="main-content">
         <Navbar />
-        <div className="page-wrapper">
+        <main id="main-content" className="page-wrapper">
           <Suspense fallback={<div style={{ color: 'var(--text-secondary)', padding: '2rem' }}>Loading application modules...</div>}>
             <Routes>
               <Route path="/login" element={<Login />} />
@@ -34,7 +36,7 @@ function App() {
               <Route path="/admin" element={<ProtectedRoute requireAdmin={true}><AdminDashboard /></ProtectedRoute>} />
             </Routes>
           </Suspense>
-        </div>
+        </main>
         <Footer />
       </div>
     </div>

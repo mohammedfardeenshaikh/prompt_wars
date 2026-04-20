@@ -1,20 +1,30 @@
 import React, { useState, useEffect } from 'react';
 import { MapPin, Navigation2, Car, Pizza, Users, Droplets, DoorOpen } from 'lucide-react';
 import Card from '../components/Card';
+import { FACILITIES, VENUE_INFO } from '../utils/constants';
+import { useMetrics } from '../hooks/useMetrics';
 import './LiveExperience.css';
 
 const LiveExperience = () => {
+  const { logPageLoad, logInteraction } = useMetrics('LiveExperience');
   const [queues, setQueues] = useState({
     gateA: 12, gateB: 4, gateC: 25
   });
   const [activeMarker, setActiveMarker] = useState(null);
+  const [a11yMessage, setA11yMessage] = useState('');
 
-  const facilitiesInfo = {
-    'washroom-w': { type: 'washroom', title: 'West Restrooms', distance: '120m', time: '2 mins', crowd: 'Medium (5m wait)' },
-    'fire-exit-n': { type: 'fire-exit', title: 'North Emergency Exit', distance: '30m', time: '30 secs', crowd: 'Clear path' },
-    'washroom-e': { type: 'washroom', title: 'East Restrooms', distance: '250m', time: '5 mins', crowd: 'High (15m wait)' },
-    'fire-exit-s': { type: 'fire-exit', title: 'South Emergency Exit', distance: '80m', time: '1 min', crowd: 'Clear path' },
-  };
+  useEffect(() => {
+    logPageLoad();
+  }, [logPageLoad]);
+
+  // Accessibility Announcement Effect
+  useEffect(() => {
+    if (activeMarker && FACILITIES[activeMarker]) {
+      setA11yMessage(`Selected ${FACILITIES[activeMarker].title}. ${FACILITIES[activeMarker].crowd}.`);
+    }
+  }, [activeMarker]);
+
+  const facilitiesInfo = FACILITIES;
 
   // Simulate live data updates (30% animation)
   useEffect(() => {
@@ -39,6 +49,9 @@ const LiveExperience = () => {
       <div className="page-header mb-4">
         <h2>Live Experience Map</h2>
         <p>Real-time analytics and navigation for your convenience.</p>
+        <div className="visually-hidden" aria-live="polite" role="status">
+          {a11yMessage}
+        </div>
       </div>
 
       <div className="grid grid-cols-3 live-layout">
@@ -58,7 +71,15 @@ const LiveExperience = () => {
               <div className="stand right pulse-high"></div>
 
               {/* Interactive Markers */}
-              <button className={`facility-marker marker-washroom ${activeMarker === 'washroom-w' ? 'active' : ''}`} style={{ top: '20%', left: '15%' }} onClick={() => setActiveMarker('washroom-w')} title="West Restrooms">
+              <button 
+                className={`facility-marker marker-washroom ${activeMarker === 'washroom-w' ? 'active' : ''}`} 
+                style={{ top: '20%', left: '15%' }} 
+                onClick={() => {
+                  setActiveMarker('washroom-w');
+                  logInteraction('Marker Selected', { marker: 'West Restrooms' });
+                }} 
+                title="West Restrooms"
+              >
                 <Droplets size={16} />
               </button>
               <button className={`facility-marker marker-fire-exit ${activeMarker === 'fire-exit-n' ? 'active' : ''}`} style={{ top: '8%', left: '50%' }} onClick={() => setActiveMarker('fire-exit-n')} title="North Emergency Exit">
@@ -79,15 +100,15 @@ const LiveExperience = () => {
           <Card title="Smart Gates (Wait Times)">
             <div className="queue-list">
               <div className="queue-item flex-between border-b pb-2 mb-2">
-                <span>Gate A (North)</span>
+                <span>{VENUE_INFO.GATES.GATE_A}</span>
                 <span className={`badge ${getStatusColor(queues.gateA)} transition-all`}>{queues.gateA} mins</span>
               </div>
               <div className="queue-item flex-between border-b pb-2 mb-2">
-                <span>Gate B (VIP Express)</span>
+                <span>{VENUE_INFO.GATES.GATE_B}</span>
                 <span className={`badge ${getStatusColor(queues.gateB)} transition-all`}>{queues.gateB} mins</span>
               </div>
               <div className="queue-item flex-between">
-                <span>Gate C (South)</span>
+                <span>{VENUE_INFO.GATES.GATE_C}</span>
                 <span className={`badge ${getStatusColor(queues.gateC)} transition-all`}>{queues.gateC} mins</span>
               </div>
             </div>
@@ -100,7 +121,7 @@ const LiveExperience = () => {
                   {facilitiesInfo[activeMarker].type === 'fire-exit' ? <DoorOpen className="text-accent-red" /> : <Droplets className="text-neon-cyan" />}
                   <h3>{facilitiesInfo[activeMarker].title}</h3>
                 </div>
-                <div className="direction-info bg-dark-subtle p-3 rounded-lg mb-3" style={{ background: 'rgba(0,0,0,0.2)', padding: '0.75rem', borderRadius: '8px' }}>
+                <div className="direction-info bg-dark-subtle p-3 rounded-lg mb-3 info-box">
                   <p className="text-sm mb-1"><strong className="text-muted">Distance:</strong> <span className="text-main">{facilitiesInfo[activeMarker].distance} ({facilitiesInfo[activeMarker].time})</span></p>
                   <p className="text-sm mb-1"><strong className="text-muted">Status:</strong> <span className={facilitiesInfo[activeMarker].type === 'fire-exit' ? 'text-accent-green' : 'text-neon-cyan'}>{facilitiesInfo[activeMarker].crowd}</span></p>
                 </div>

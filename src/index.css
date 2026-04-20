@@ -247,3 +247,35 @@ p {
 .animate-fade-in {
   animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
+
+/* Accessibility Utilities */
+.skip-link {
+  position: absolute;
+  top: -100px;
+  left: 0;
+  background: var(--neon-cyan);
+  color: var(--bg-dark);
+  padding: 1rem;
+  z-index: 9999;
+  transition: top 0.3s;
+  font-weight: 700;
+  text-decoration: none;
+  border-radius: 0 0 8px 0;
+}
+
+.skip-link:focus {
+  top: 0;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+

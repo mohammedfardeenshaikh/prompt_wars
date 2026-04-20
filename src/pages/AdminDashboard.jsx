@@ -3,6 +3,8 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import { Send, Users, Activity, AlertTriangle } from 'lucide-react';
 import Card from '../components/Card';
 import Button from '../components/Button';
+import { VENUE_INFO } from '../utils/constants';
+import { useMetrics } from '../hooks/useMetrics';
 import './AdminDashboard.css';
 
 const initialData = [
@@ -16,6 +18,11 @@ const initialData = [
 
 const AdminDashboard = () => {
   const [data, setData] = useState(initialData);
+  const { logPageLoad, logInteraction } = useMetrics('AdminDashboard');
+
+  useEffect(() => {
+    logPageLoad();
+  }, [logPageLoad]);
 
   // Simulate incoming live data
   useEffect(() => {
@@ -32,7 +39,7 @@ const AdminDashboard = () => {
         }
         
         const newTime = `${String(newHours).padStart(2, '0')}:${String(newMins).padStart(2, '0')}`;
-        const newAttendance = Math.min(65000, last.attendance + Math.floor(Math.random() * 500) - 100);
+        const newAttendance = Math.min(VENUE_INFO.THRESHOLDS.ATTENDANCE_MAX, last.attendance + Math.floor(Math.random() * 500) - 100);
         const newQueue = Math.max(1, last.queueAvg + Math.floor(Math.random() * 4) - 2);
 
         const newData = [...prev.slice(1), { time: newTime, attendance: newAttendance, queueAvg: newQueue }];
@@ -90,7 +97,12 @@ const AdminDashboard = () => {
       <div className="grid grid-cols-3 gap-4">
         {/* Charts */}
         <Card className="col-span-2 chart-card" title="Attendance & Queue Dynamics">
-          <div className="chart-container" style={{ width: '100%', height: 300 }}>
+          <div className="visually-hidden" id="attendance-chart-desc">
+            This chart shows attendance and average gate wait times over the last few hours.
+            Attendance has grown from 12,000 at 17:00 to approximately {data[data.length - 1].attendance} currently.
+            Wait times are currently averaging {data[data.length - 1].queueAvg} minutes.
+          </div>
+          <div className="chart-container dashboard-chart" role="img" aria-describedby="attendance-chart-desc">
             <ResponsiveContainer>
               <AreaChart data={data} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
                 <defs>
@@ -132,7 +144,7 @@ const AdminDashboard = () => {
             </div>
           </div>
           
-          <Button icon={Send} className="w-full mt-4">Send Broadcast</Button>
+          <Button icon={Send} className="w-full mt-4" onClick={() => logInteraction('Broadcast Sent')}>Send Broadcast</Button>
         </Card>
       </div>
     </div>
